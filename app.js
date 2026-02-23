@@ -19,3 +19,7 @@ app.set('view engine','ejs')
 app.use(express.urlencoded({extended: true}))
 
 app.use('/',indexRouter)
+
+app.use((req,res)=>{
+    res.status(400).send('Page not found')
+})
