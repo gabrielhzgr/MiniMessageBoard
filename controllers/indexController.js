@@ -1,16 +1,17 @@
-const messages = require('../messages')
+const db = require('../db/queries')
 
-function getIndex(req,res){
-    res.render('index',{title:'Mini Messageboard' ,messages})
+async function getIndex(req,res){
+    const messages = await db.getAllMessages()
+    res.render('index',{title:'Mini Messageboard', messages})
 }
 
 function getCreateForm(req,res){
     res.render('form',{title: 'Mini Messageboard'})
 }
 
-function createNewMessage(req,res){
-    const {messageUser, messageText} = req.body
-    messages.push({user: messageUser, text: messageText, added: new Date()})
+async function createNewMessage(req,res){
+    const {user, text} = req.body
+    await db.insertMessage({user, text, added: new Date().toISOString()})
     res.redirect('/')
 }
 
