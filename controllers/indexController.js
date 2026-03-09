@@ -1,4 +1,5 @@
 const db = require('../db/queries')
+const {body, validationResult, matchedData} = require('express-validator')
 
 async function getIndex(req,res){
     const messages = await db.getAllMessages()
@@ -6,14 +7,28 @@ async function getIndex(req,res){
 }
 
 function getCreateForm(req,res){
-    res.render('form',{title: 'Mini Messageboard'})
+    res.render('form',{title: 'Post a new Message'})
 }
 
-async function createNewMessage(req,res){
+const validateUser = [
+    body('user').trim()
+        .isLength({max:255}).withMessage('user must be max. 255 characters'),
+    body('text').trim()
+        .isLength({max:3000}).withMessage('message must be max. 3000 characters')
+]
+
+const createNewMessage = [validateUser, async(req,res)=>{
+    const errors = validationResult(req)
+    if(!errors.isEmpty()){
+        return res.status(400).render('form',{
+            title:'Post a new Message',
+            errors:errors.array()
+        })
+    }
     const {user, text} = req.body
     await db.insertMessage({user, text, added: new Date().toISOString()})
     res.redirect('/')
-}
+}]
 
 async function getMessageById(req,res){
     

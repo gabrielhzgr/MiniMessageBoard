@@ -7,11 +7,12 @@
 </head>
 <body>
     <h1>Create new message</h1>
+    <%- include('partials/errors.ejs') %>
     <form method="POST" action='/new'>
         <label for="user">Author's name</label>
-        <input type="text" id="user" name="user">
+        <input type="text" id="user" name="user" required>
         <label for="messageText">Message text</label>
-        <input type="text" id="text" name="text">
+        <input type="text" id="text" name="text" required>
         <button>Submit</button>
     </form>
 </body>
