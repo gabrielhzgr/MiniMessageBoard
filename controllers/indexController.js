@@ -15,15 +15,15 @@ async function createNewMessage(req,res){
     res.redirect('/')
 }
 
-function getMessageById(req,res){
+async function getMessageById(req,res){
     
     try{
         let id = Number(req.params.id)
-        const message = messages[id]
-        if(!message){
+        const message = await db.getMessageById(id)
+        if(message.rows.length==0){
             throw error
         }
-        res.render('message',{title: 'Mini Messageboard', message: message})
+        res.render('message',{title: 'Mini Messageboard', message: message.rows[0]})
     }catch(err){
         res.status(400).send('Message not found')
     }

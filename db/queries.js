@@ -11,4 +11,12 @@ async function insertMessage(msg){
         [msg.user, msg.text, msg.added])
 }
 
-module.exports = { getAllMessages, insertMessage }
+async function getMessageById(id){
+    const row = await pool.query(
+        'SELECT * FROM messages WHERE id = $1',
+        [id]
+    )
+    return row
+}
+
+module.exports = { getAllMessages, insertMessage, getMessageById }
